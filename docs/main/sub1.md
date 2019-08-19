@@ -1,6 +1,9 @@
 # 一.编码优化
-### 1).data属性  
-不要将所有的数据都放在data中，data中的数据都会增加getter和setter，会收集对应的watcher
+## 1).data属性  
+视图渲染中不必要的数据不可放在data中，data中的数据都会增加getter和setter，会收集对应的watcher。data数据过多，会影响性能。
+
+### 源码
+
 ```javascript
 export function defineReactive (
   obj: Object,
@@ -39,8 +42,18 @@ export function defineReactive (
 }
 ```
 
-### 2).SPA页面采用keep-alive缓存组件
-keep-alive可以实现组件的缓存功能，缓存当前组件的实例
+## 2).SPA页面采用keep-alive缓存组件
+keep-alive可以实现组件的缓存功能，缓存当前组件的实例，及组件的状态。
+
+### 实例
+```javascript
+<!-- 失活的组件将会被缓存！-->
+<keep-alive>
+  <component v-bind:is="currentTabComponent"></component>
+</keep-alive>
+```
+
+### 源码
 ```javascript
 render () {
     const slot = this.$slots.default // 获取默认插槽
@@ -85,24 +98,36 @@ render () {
   }
 ```
   
-### 3).拆分组件 
+## 3).拆分组件 
   - 提高复用性、增加代码的可维护性
   - 减少不必要的渲染 (尽可能细化拆分组件)
 
-### 4).v-if 
-当值为false时内部指令不会执行,具有阻断功能，很多情况下使用v-if替代v-show
+## 4).v-if 
+`v-if`是`真正` 的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建；当值为`false`时条件块不渲染, 具有阻断功能，很多情况下使用v-if替代v-show。
 
-### 5).key保证唯一性 
+`v-show`不管初始条件是什么，元素总会被渲染，并且只是简单的给予CSS的display属性进行切换。
+
+## 5).key保证唯一性 
 - 默认vue会采用就地复用策略
 - 如果数据项的顺序被改变，Vue不会移动DOM元素来匹配数据项的顺序
-- 应该用数据的id作为key属性
+- 应该用数据的id作为key属性，确保数据的唯一性
 
-### 6).Object.freeze
-vue会实现数据劫持，给没个属性增加getter和setter，可以使用freeze冻结数据
+## 6).Object.freeze
+vue会实现数据劫持，给每个属性增加getter和setter，可以使用freeze冻结数据。
+
 ```javascript
-Object.freeze([{ value: 1 },{ value: 2 }]);
+export default {
+  data: () => ({
+    users: {}
+  }),
+  async created() {
+    const users = await axios.get("/api/users");
+    this.users = Object.freeze(users);
+  }
+}
 ```
 在数据劫持时属性不能被配置，不会重新定义
+
 ```javascript
 const property = Object.getOwnPropertyDescriptor(obj, key)
 if (property && property.configurable === false) {
@@ -110,7 +135,7 @@ return
 }
 ```
 
-### 7).路由懒加载、异步组件
+## 7).路由懒加载、异步组件
 动态加载组件，依赖webpack-codespliting功能
 ```javascript
 const router = new VueRouter({
@@ -129,8 +154,10 @@ export default {
   }
 };
 ```
-### 8).runtime运行时
+## 8).runtime运行时
 在开发时尽量采用单文件的方式.vue 在webpack打包时会进行模板的转化
 
-### 9).数据持久化的问题 
-- vuex-persist 合理使用 (防抖、节流)
+## 9).数据持久化的问题 
+- 通过将数据存放在`cookie`、`localStorage`、`sessionStorage中`，减少不必要的接口重复请求，并保证数据持久化存储, 也可以使用`vuex-persist`插件，实现自动化数据存储。
+
+- 防抖、节流

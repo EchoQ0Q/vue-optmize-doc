@@ -1,5 +1,5 @@
 # 三.用户体验
-### 1).app-skeleton
+## 1).app-skeleton
 配置webpack插件 vue-skeleton-webpack-plugin  
 单页骨架屏幕
 ```javascript
@@ -101,7 +101,7 @@ class MyPlugin {
 }
 ```
 
-### 2).app-shell
-### 3).pwa manifest serviceWorker
+## 2).app-shell
+## 3).pwa manifest serviceWorker
 
 > 浏览器性能分析=>performance

@@ -1,107 +1,63 @@
 # 三.用户体验
 ## 1).app-skeleton
-配置webpack插件 vue-skeleton-webpack-plugin  
-单页骨架屏幕
+为了减少白屏时间，在页面完全渲染完成之前提升用户感知体验，可以通过插件[vue-skeleton-webpack-plugin](https://github.com/lavas-project/vue-skeleton-webpack-plugin)为单页/多页应用生成骨架屏`skeleton`来优化用户体验。  
+
+>   VUE骨架屏的原理是: 在项目编译之前，将骨架屏插件编译成`html`输出到项目`index.html`内的`#app`节点内，在当页面完全渲染完成之后，VUE即会实时替换`#app`内的内容。
+我们可以为项目MPA(多页面应用)配置骨架屏，也可为SPA(单页面应用)的多路由配置骨架屏，具体方法可参考官方文档。
+
+以在`vue-cli3`中使用骨架屏为例，具体做法如下：
+
+-  1. 在vue.config.js中引入插件，并初始化配置
+```javascript
+const path = require('path');
+const SkeletonWebpackPlugin = require('vue-skeleton-webpack-plugin');
+
+module.exports = {
+  configureWebpack: {
+    plugins: [
+      new SkeletonWebpackPlugin({
+        webpackConfig: {
+          entry: {
+            app: path.join(__dirname, './src/skeleton.js'),
+          },
+        },
+        minimize: true,
+        quiet: true,
+      }),
+    ],
+  },
+}
+```
+
+-  2. 创建skeleton组件
+```javascript
+<template>
+  <div class="skeleton-wrapper">
+    <section class="skeleton-block">
+        骨架屏
+    </section>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Skeleton',
+};
+</script>
+```
+
+-  3. 创建skeleton入口文件
 ```javascript
 import Vue from 'vue';
 import Skeleton from './Skeleton.vue';
-export default new Vue({
-    components: {
-        Skeleton:Skeleton
-    },
-    template: `
-        <Skeleton></Skeleton>    
-    `
-});
-// 骨架屏
-plugins: [
-    new SkeletonWebpackPlugin({
-        webpackConfig: {
-            entry: {
-                app: resolve('./src/entry-skeleton.js')
-            }
-        }
-    })
-]
-```
-
-带路由的骨架屏，编写skeleton.js文件
-```javascript
-import Vue from 'vue';
-import Skeleton1 from './Skeleton1';
-import Skeleton2 from './Skeleton2';
 
 export default new Vue({
-    components: {
-        Skeleton1,
-        Skeleton2
-    },
-    template: `
-        <div>
-            <skeleton1 id="skeleton1" style="display:none"/>
-            <skeleton2 id="skeleton2" style="display:none"/>
-        </div>
-    `
+  components: {
+    Skeleton,
+  },
+  render: h => h(Skeleton),
 });
-```
-
-```javascript
-new SkeletonWebpackPlugin({
-    webpackConfig: {
-        entry: {
-            app: path.join(__dirname, './src/skeleton.js'),
-        },
-    },
-    router: {
-        mode: 'history',
-        routes: [
-            {
-                path: '/',
-                skeletonId: 'skeleton1'
-            },
-            {
-                path: '/about',
-                skeletonId: 'skeleton2'
-            },
-        ]
-    },
-    minimize: true,
-    quiet: true,
-})
-```
-
-> 优化白屏效果
-
-实现骨架屏插件
-```javascript
-class MyPlugin {
-    apply(compiler) {
-        compiler.plugin('compilation', (compilation) => {
-            compilation.plugin(
-                'html-webpack-plugin-before-html-processing',
-                (data) => {
-                    data.html = data.html.replace(`<div id="app"></div>`, `
-                        <div id="app">
-                            <div id="home" style="display:none">首页 骨架屏</div>
-                            <div id="about" style="display:none">about页面骨架屏</div>
-                        </div>
-                        <script>
-                            if(window.hash == '#/about' ||  location.pathname=='/about'){
-                                document.getElementById('about').style.display="block"
-                            }else{
-                                document.getElementById('home').style.display="block"
-                            }
-                        </script>
-                    `);
-                    return data;
-                }
-            )
-        });
-    }
-}
 ```
 
 ## 2).app-shell
 ## 3).pwa manifest serviceWorker
-
-> 浏览器性能分析=>performance

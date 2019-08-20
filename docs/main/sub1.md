@@ -1,5 +1,8 @@
 # 一.编码优化
 ## 1).data属性  
+
+![An image](../.vuepress/images/data.png)
+
 视图渲染中不必要的数据不可放在data中，data中的数据都会增加getter和setter，会收集对应的watcher。data数据过多，会影响性能。
 
 ### 源码
@@ -155,9 +158,42 @@ export default {
 };
 ```
 ## 8).runtime运行时
-在开发时尽量采用单文件的方式.vue 在webpack打包时会进行模板的转化
+使用VUE开发项目，尽量采取`runtime`构建版本，运行时版本相比完整版体积要小大约 30%，并且包含编译器会对使用VUE`template`属性的代码在客户端进行运行时编译，相对影响性能。
+因此建议使用`runtime`构建版本，在开发时尽量采用单文件的方式。
+
+```javascript
+// 需要编译器
+new Vue({
+  template: '<div>{{ hi }}</div>'
+})
+
+// 不需要编译器
+new Vue({
+  render (h) {
+    return h('div', this.hi)
+  }
+})
+```
 
 ## 9).数据持久化的问题 
-- 通过将数据存放在`cookie`、`localStorage`、`sessionStorage中`，减少不必要的接口重复请求，并保证数据持久化存储, 也可以使用`vuex-persist`插件，实现自动化数据存储。
+- 通过将数据存放在`cookie`、`localStorage`、`sessionStorage中`，减少不必要的接口重复请求，并保证数据持久化存储, 也可以使用`vuex-persistedstate`插件，实现自动化数据存储。
 
-- 防抖、节流
+- 采用防抖、节流操作
+
+::: warning COMPATIBILITY NOTE
+因为`localstorage`、`sessionstorage`的写入是同步的，因此存在不小的性能开销，使用`localstorage`、`sessionstorage`时要注意：
+- 多次写入操作合并为一次，比如采用函数节流或者将数据先缓存在内存中，最后在一并写入
+- 只有在必要的时候才写入
+:::
+
+##  10).事件销毁
+VUE组件销毁时，会自动清理它与其他实例的连接，解绑它的全部指令及事件监听器，但仅限于组件本身的事件。如果在js内使用`addEventListener`等方式是不会自动销毁的，因此需要在组件销毁时移除事件监听，以免内存泄漏。
+
+```javascript
+created() {
+  addEventListener('click', this.click, false)
+},
+beforeDestroy() {
+  removeEventListener('click', this.click, false)
+}
+```

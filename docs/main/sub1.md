@@ -1,5 +1,5 @@
 # 一.编码优化
-## 1).data属性  
+## data属性  
 
 ![An image](../.vuepress/images/data.png)
 
@@ -45,7 +45,7 @@ export function defineReactive (
 }
 ```
 
-## 2).SPA页面采用keep-alive缓存组件
+## keep-alive缓存组件
 keep-alive可以实现组件的缓存功能，缓存当前组件的实例，及组件的状态。
 
 ### 实例
@@ -101,21 +101,21 @@ render () {
   }
 ```
   
-## 3).拆分组件 
+## 拆分组件 
   - 提高复用性、增加代码的可维护性
   - 减少不必要的渲染 (尽可能细化拆分组件)
 
-## 4).v-if 
+## v-if 
 `v-if`是`真正` 的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建；当值为`false`时条件块不渲染, 具有阻断功能，很多情况下使用v-if替代v-show。
 
 `v-show`不管初始条件是什么，元素总会被渲染，并且只是简单的给予CSS的display属性进行切换。
 
-## 5).key保证唯一性 
+## key保证唯一性 
 - 默认vue会采用就地复用策略
 - 如果数据项的顺序被改变，Vue不会移动DOM元素来匹配数据项的顺序
 - 应该用数据的id作为key属性，确保数据的唯一性
 
-## 6).Object.freeze
+## Object.freeze
 vue会实现数据劫持，给每个属性增加getter和setter，可以使用freeze冻结数据。
 
 ```javascript
@@ -138,7 +138,7 @@ return
 }
 ```
 
-## 7).路由懒加载、异步组件
+## 路由懒加载、异步组件
 动态加载组件，依赖webpack-codespliting功能
 ```javascript
 const router = new VueRouter({
@@ -157,7 +157,7 @@ export default {
   }
 };
 ```
-## 8).runtime运行时
+## runtime运行时
 使用VUE开发项目，尽量采取`runtime`构建版本，运行时版本相比完整版体积要小大约 30%，并且包含编译器会对使用VUE`template`属性的代码在客户端进行运行时编译，相对影响性能。
 因此建议使用`runtime`构建版本，在开发时尽量采用单文件的方式。
 
@@ -175,7 +175,7 @@ new Vue({
 })
 ```
 
-## 9).数据持久化的问题 
+## 数据持久化的问题 
 - 通过将数据存放在`cookie`、`localStorage`、`sessionStorage中`，减少不必要的接口重复请求，并保证数据持久化存储, 也可以使用`vuex-persistedstate`插件，实现自动化数据存储。
 
 - 采用防抖、节流操作
@@ -186,7 +186,7 @@ new Vue({
 - 只有在必要的时候才写入
 :::
 
-##  10).事件销毁
+##  事件销毁
 VUE组件销毁时，会自动清理它与其他实例的连接，解绑它的全部指令及事件监听器，但仅限于组件本身的事件。如果在js内使用`addEventListener`等方式是不会自动销毁的，因此需要在组件销毁时移除事件监听，以免内存泄漏。
 
 ```javascript

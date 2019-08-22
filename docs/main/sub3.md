@@ -92,7 +92,9 @@ export default {
 </script>
 ```
 
-## Skeleton Screen骨架屏
+## 骨架屏Loading插件
+
+
 
 
 

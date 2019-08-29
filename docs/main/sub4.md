@@ -44,7 +44,12 @@ module.exports = {
                     // 全局对象属性
                     inject: {
                       foo: 'bar'
-                    }
+                    },
+                    // 设定预渲染等待时间
+                    renderAfterTime: 5000,
+                    // 等待渲染，直到在document触发指定的事件，
+                    // 我们可以这样触发事件: document.dispatchEvent(new Event('custom-render-trigger'))
+                    renderAfterDocumentEvent: 'render-event',
                 }),
                 // 可选 - 压缩预渲染页面
                 minify: {
@@ -60,7 +65,11 @@ module.exports = {
 }
  ```
 
- 配置完成之后，每次build打包之后，都会把配置中的路由页面编译为html。
+配置完成之后，每次build打包之后，都会把配置中的路由页面编译为html。
+
+::: warning Vue.js Notes
+如果在使用Vue.js进行异步预渲染时遇到问题，可尝试将`data-server-rendered =“true”`属性添加到根应用元素中。 这将导致Vue将当前的页面视为已经呈现的应用程序去更新它而不是完全重新渲染整个树, 也可以在使用`renderAfterDocumentEvent`预渲染之前使用JavaScript操作DOM。
+:::
 
 
 

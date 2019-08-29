@@ -1,35 +1,5 @@
 # 二.vue加载性能优化
 
-##  第三方插件按需导入
-
-我们在项目中经常需要引入第三方插件，如果我们直接引入整个插件，会导致体积太大，因此可借助[babel-plugin-import](https://github.com/ant-design/babel-plugin-import)只引入需要的组件。
-以下为项目引入iview为例,具体做法如下:
-
-(1) 首先安装`babel-plugin-import`:
-
-```javascripit
-npm install babel-plugin-import -D
-```
-
-(2) 然后在.babelrc文件添加
-
-```javascript
-{
-  plugins: [["import", {
-    "libraryName": "iview",
-    "libraryDirectory": "src/components"
-  }]]
-}
-```
-
-(3) 最后在main.js中可以按需引入组件
-
-```javascript
-import { Button, Table } from 'iview';
-Vue.component('Button', Button);
-Vue.component('Table', Table);
-```
-
 ##  图片懒加载  
 
 对于图片过多的页面，为了加速页面加载速度，所以很多时候我们需要将页面内未出现在可视区域内的图片先不做加载， 等到滚动到可视区域后再去加载。这样对于页面加载性能上会有很大的提升，也提高了用户体验。可使用[vue-lazyload](https://github.com/hilongjw/vue-lazyload) 插件，具体做法如下：

@@ -94,7 +94,100 @@ export default {
 
 ## 骨架屏Loading插件
 
+[Vue Skeleton Loading](https://github.com/jiingwang/vue-skeleton-loading) 是一个让我们快速和方便写出自定义 skeleton loading 的插件。
+我们可以使用组件快速生成和项目架构相似的骨架屏显示效果。
 
+![An image](https://camo.githubusercontent.com/02506976c41ce1dd15c16adbba08a547892c6162/68747470733a2f2f6a69696e6777616e672e6769746875622e696f2f7675652d736b656c65746f6e2d6c6f6164696e672f736b656c65746f6e2d6c6f6164696e672d64656d6f312e676966)
+
+具体使用方法如下，详细可点击链接查看：
+- 1. 安装依赖
+```javascript
+npm install vue-skeleton-loading --save 
+```
+
+- 2. 全局注册
+
+```javascript
+// 引用组件
+import VueSkeletonLoading from 'vue-skeleton-loading';
+// 安装插件
+Vue.use(VueSkeletonLoading);
+```
+
+- 3. 骨架屏单文件.vue
+```javascript
+<template>
+    <div class="page">
+        <skeleton-loading>
+            <row 
+                :gutter="{
+                    bottom: '15px'
+                }"
+            >
+                <square-skeleton 
+                    :count="2"
+                    :boxProperties="{
+                        top: '10px',
+                        height: '26px'
+                    }"
+                >
+                </square-skeleton>
+            </row>
+            <row>
+                <column :span="4">
+                    <circle-skeleton></circle-skeleton>
+                </column>
+                <column :span="20" :gutter="20">
+                    <square-skeleton 
+                        :boxProperties="{
+                            top: '10px',
+                            width: '70px',
+                            height: '15px'
+                        }"
+                    >
+                    </square-skeleton>
+                    <square-skeleton 
+                        :boxProperties="{
+                            width: '100px',
+                            height: '15px',
+                            top: '10px'
+                        }"
+                    >
+                    </square-skeleton>
+                </column>
+            </row>
+            <row :gutter="{top: '20px'}">
+                <square-skeleton 
+                    :count="4"
+                    :boxProperties="{
+                        bottom: '10px'
+                    }" 
+                >
+                </square-skeleton>
+            </row>
+            <row>
+                 <square-skeleton 
+                    :boxProperties="{
+                        bottom: '10px',
+                        height: '200px'
+                    }"    
+                >
+                </square-skeleton>
+            </row>
+        </skeleton-loading>
+    </div>
+</template>
+
+<script>
+    export default {}
+</script>
+
+<style lang="less">
+    .page {
+        padding: 15px;
+    }
+</style>
+```
 
 
 
